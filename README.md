@@ -1,7 +1,7 @@
 # AIndromeda
 
-A page template built with astro and tailwindcss using tailus blocks.
-
+A landing page for our new startup AIndromeda.
+AIndromeda, an Gen AI solutions company, we adeptly manage complex datasets for businesses, developers, and research institutions. Using LangChain and OpenAI API, our app can quickly and effectively train on Github repos and can interpret custom large database, offering up-to-date insights on newer frameworks. As a cost-effective solution, AIndromeda apps optimize API calls and highlights undocumented elements of datasets. Future updates will introduce a "Stack Helper" application.
 
 ## 🚀 Project Structure
 
