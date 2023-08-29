@@ -1,0 +1,110 @@
+---
+import HeroSection from '../components/HeroSection.astro';
+import Layout from '../layouts/Layout.astro';
+import Features from "../components/Features.astro";
+import Stats from "../components/Stats.astro";
+import Testimonials from "../components/Testimonials.astro";
+import CallToAction from "../components/CallToAction.astro";
+import Blog from "../components/Blog.astro";
+
+// add the global object right here.
+
+const app = {
+	animation: {
+		header: {
+			duration: 700,
+			delay: 0
+		},
+		section: {
+			duration: 700,
+		}
+	}
+}
+
+---
+
+<Layout data={app} title="Welcome to Astrolus.">
+	<main class="space-y-40 mb-40">
+		<HeroSection data={app} />
+		<Features data={app} />
+		<Stats data={app} />
+		<Testimonials data={app} />
+		<CallToAction data={app} />
+		<Blog data={app} />
+	</main>
+</Layout>
+
+
+<script type="module">
+
+	// Import npm modules.
+	import anime from 'animejs'
+
+	function getStaggeringAnimations(){
+		const elements = [];
+		const result = document.querySelectorAll('.animate-stagger');
+		result.forEach(elem => {
+			elements.push(...elem.children);
+		})
+
+		return elements;
+	}
+
+	[...document.querySelectorAll('.animate-left'), ...document.querySelectorAll('.animate-right'), ...getStaggeringAnimations() ].forEach(el => {
+		el.style.opacity = 0;
+	});
+
+
+	function animateElement(className, animationPrams, isStagger = false){
+		document.querySelectorAll(`.${className}`).forEach(element => {
+			if(isVisible(element) && !element.classList.contains('animated')) {
+				anime({
+					targets: !isStagger ? element : element.children,
+					...animationPrams
+				});
+
+				element.classList.add('animated')
+			}
+		})
+	}
+
+	function isVisible(el){
+		let rect = el.getBoundingClientRect();
+		let viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+
+		// Check if the element is in the viewport
+		// return (
+		// 	rect.top >= 0 &&
+		// 	rect.left >= 0 &&
+		// 	rect.bottom <= viewHeight
+		// );
+
+		const rectPos = rect.top + 200;
+
+		return rectPos >= 0 && rectPos <= viewHeight;
+	}
+
+	window.addEventListener("scroll", () => {
+
+		animateElement('animate-left', {
+			opacity: [0,1],
+			translateX: ["200px", 0],
+			duration: 800,
+			easing: "easeOutExpo"
+		});
+
+		animateElement('animate-right', {
+			opacity: [0,1],
+			translateX: ["-200px", 0],
+			duration: 800,
+			easing: "easeOutExpo"
+		});
+
+		animateElement('animate-stagger', {
+			opacity: [0, 1],
+			translateY: ['-40px', '0'],
+			duration: 400,
+			delay: anime.stagger(100)
+		}, true);
+	})
+</script>

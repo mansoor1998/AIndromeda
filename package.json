@@ -1,0 +1,21 @@
+{
+  "name": "astrolus",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "astro": "^1.1.5",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^1.0.0",
+    "@types/animejs": "^3.1.7"
+  }
+}

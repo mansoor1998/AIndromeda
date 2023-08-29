@@ -1,0 +1,101 @@
+import anime from "animejs";
+import React, {ForwardedRef, ReactNode, useEffect, useRef, useState} from "react";
+import { v4 as uuidv4 } from 'uuid';
+
+export enum AnimationType {
+    leftToRight,
+    rightToLeft,
+    slideLeftRight,
+    staggerFade
+}
+
+interface MyComponentProps {
+    children: ReactNode;
+}
+
+// animation params/options.
+const animationLeftRight = {
+    opacity: [0,1],
+    translateX: ["200px", 0],
+    duration: 800,
+    easing: "easeOutExpo"
+}
+
+const animationRightLeft = {
+    opacity: [0,1],
+    translateX: ["-200px", 0],
+    duration: 800,
+    easing: "easeOutExpo"
+}
+
+const animationStaggerFade = {
+    opacity: [0, 1],
+    translateY: ['-40px', '0'],
+    duration: 1000,
+    delay: anime.stagger(1000)
+}
+
+
+
+
+const Animation = React.forwardRef(({ children, animationType }: {  animationType: AnimationType, children: any }, ref: ForwardedRef<any>) => {
+
+    let [animation, setAnimation] = useState(false);
+    // assist setting the value of animation.
+    let [check, setCheck] = useState(false);
+
+    const animationRef = useRef(null);
+    const elements: any[] = (Array.isArray(children)) ? children : [children];
+
+    const checkVisibility = () => {
+        if (animationRef.current) {
+            const elementRect = animationRef.current.getBoundingClientRect();
+            setCheck(elementRect.top < window.innerHeight - 300 && elementRect.bottom >= 0);
+        }
+    };
+
+    useEffect(() => {
+        console.log('animation ref is created');
+        checkVisibility();
+
+        window.addEventListener('scroll', () => checkVisibility());
+
+        return () => {
+            window.removeEventListener('scroll', () => checkVisibility());
+        };
+
+    }, [animationRef])
+
+    useEffect(() => {
+        if(!animation)
+            setAnimation(check);
+    }, [check])
+
+    useEffect(() => {
+        let animationParams = (() => {
+            switch(animationType) {
+                case AnimationType.leftToRight:
+                    return animationLeftRight;
+                case AnimationType.rightToLeft:
+                    return animationRightLeft;
+                case AnimationType.staggerFade:
+                return animationStaggerFade
+            }
+        })()
+
+
+        if(animation) anime({
+            targets: (elements.length > 1) ? '.animate-stagger' : animationRef.current,
+            ...animationParams
+        });
+    }, [animation])
+
+
+    return (
+        <>
+            { elements.map(e => React.cloneElement(e, {key: uuidv4(), ref: animationRef, style: animation ? {} : { visibility: 'hidden' } })) }
+        </>
+    )
+});
+
+export {Animation}
